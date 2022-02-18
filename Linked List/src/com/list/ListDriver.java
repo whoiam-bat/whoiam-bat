@@ -68,7 +68,8 @@ public class ListDriver {
                     local.add(30);
                     System.out.println("Global list: " + list);
                     System.out.println("Local list: " + local);
-                    System.out.println("Result: " + new DoublyList().concat((DoublyList) list, local));
+                    list = new DoublyList().concat((DoublyList) list, local);
+                    System.out.println("Result: " + list);
                 }
                 case 8 -> list.clear();
                 case 9 -> {

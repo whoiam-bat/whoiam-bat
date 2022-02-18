@@ -151,10 +151,12 @@ public class CycleList implements Collection{
     @Override
     public void swap(int index1, int index2) {
         if (size() == 0) throw new RuntimeException("List is empty");
-        if (index1 == 0) {
+        if (index1 == 0 && index2 != size() - 1) {
             replaceWithHead(index2);
-        } else if (index2 == size() - 1) {
+        } else if (index2 == size() - 1 && index1 != 0) {
             replaceWithTail(index1);
+        } else if(index1 == 0 && index2 == size() - 1) {
+            replaceHeadTail();
         } else {
             replace(index1, index2);
         }
@@ -182,6 +184,13 @@ public class CycleList implements Collection{
         temp.next = null;
         tail = temp;
         tail.next = head;
+    }
+    
+    public void replaceHeadTail() {
+        double temp = 0;
+        temp = head.variable;
+        head.variable = tail.variable;
+        tail.variable = temp;
     }
 
     @Override
@@ -220,6 +229,7 @@ public class CycleList implements Collection{
     public boolean contains(double searchedValue) {
         return indexOf(searchedValue) != -1;
     }
+
     /** Concat two list and writes result in third list
      * @param curr first list
      * @param other second list
