@@ -151,12 +151,12 @@ public class CycleList implements Collection{
     @Override
     public void swap(int index1, int index2) {
         if (size() == 0) throw new RuntimeException("List is empty");
-        if (index1 == 0 && index2 != size() - 1) {
-            replaceWithHead(index2);
-        } else if (index2 == size() - 1 && index1 != 0) {
-            replaceWithTail(index1);
-        } else if(index1 == 0 && index2 == size() - 1) {
+        if(index1 == 0 &     index2 == size() - 1) {
             replaceHeadTail();
+        } else if (index1 == 0 & index2 != size() - 1) {
+            replaceWithHead(index2);
+        } else if (index1 != 0 & index2 == size - 1) {
+            replaceWithTail(index1);
         } else {
             replace(index1, index2);
         }
@@ -176,19 +176,13 @@ public class CycleList implements Collection{
 
     @Override
     public void replaceWithTail(int index1) {
-        Node temp = tail.prev;
-        tail.next = tail.prev;
-        tail.prev = temp.prev;
-        temp.prev.next = tail;
-        temp.prev = temp.next;
-        temp.next = null;
-        tail = temp;
-        tail.next = head;
+       double temp = tail.variable;
+       tail.variable = tail.prev.variable;
+       tail.prev.variable = temp;
     }
     
     public void replaceHeadTail() {
-        double temp = 0;
-        temp = head.variable;
+        double temp = head.variable;
         head.variable = tail.variable;
         tail.variable = temp;
     }
