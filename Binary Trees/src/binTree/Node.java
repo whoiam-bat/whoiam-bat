@@ -1,3 +1,5 @@
+package binTree;
+
 public class Node {
     private String surname;
     private int place;
@@ -5,7 +7,6 @@ public class Node {
 
     private Node left;
     private Node right;
-    private String color;
 
     public Node(String surname, int place, double luggageWeight) {
         this.surname = surname;
@@ -34,13 +35,6 @@ public class Node {
         return right;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
 
     public void setData(Node node){
         this.setSurname(node.getSurname());
@@ -69,14 +63,6 @@ public class Node {
     }
 
 
-    public boolean isRed() {
-        return color.equals("RED");
-    }
-
-    public boolean isBlack() {
-        return color.equals("BLACK");
-    }
-
     public boolean hasNextLeft() {
         return left != null;
     }
@@ -88,9 +74,17 @@ public class Node {
 
     @Override
     public String toString() {
+        return "[name = " + surname +
+                ", place = " + place +
+                ", luggage = " + luggageWeight + "]";
+    }
+
+
+    /*@Override
+    public String toString() {
         StringBuilder sb = new StringBuilder("[name = " + surname +
                 ", place = " + place +
                 ", luggage = " + luggageWeight);
         return String.valueOf(color == null || color.equals("") ? sb.append("]") : sb.append(", color = " + color + "]"));
-    }
+    }*/
 }

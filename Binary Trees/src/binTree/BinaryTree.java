@@ -1,7 +1,9 @@
+package binTree;
+
 import java.util.*;
 
 public class BinaryTree {
-    Node root;
+    public Node root;
 
     private int size;
 
@@ -170,12 +172,6 @@ public class BinaryTree {
         }
         return res;
     }
-
-    public BinaryTree buildRedBlackTree() {
-        return null;
-    }
-
-
 
     private int getSize() {
         return size;
