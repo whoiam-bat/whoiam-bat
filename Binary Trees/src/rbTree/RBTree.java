@@ -1,14 +1,8 @@
 package rbTree;
 
-import binTree.Node;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.TreeVisitor;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.prefs.NodeChangeEvent;
 import java.util.stream.Collectors;
 
 public class RBTree{
@@ -31,10 +25,8 @@ public class RBTree{
         insertingNode.setParent(null);
         insertingNode.setLeft(TNULL);
         insertingNode.setRight(TNULL);
-
         NodeRB x = root;
         NodeRB y = null;
-
         while(x != TNULL) {
             y = x;
             if (insertingNode.getPlace() < x.getPlace()) {
@@ -43,7 +35,6 @@ public class RBTree{
                 x = x.getRight();
             }
         }
-
         insertingNode.setParent(y);
         if(y == null) {
             root = insertingNode;
@@ -52,7 +43,6 @@ public class RBTree{
         } else if(insertingNode.getPlace() > y.getPlace()) {
             y.setRight(insertingNode);
         }
-
         if(insertingNode.getParent() == null) {
             insertingNode.setColor(Color.BLACK);
             return;
@@ -64,11 +54,9 @@ public class RBTree{
     }
     private void insertingBalance(NodeRB node) {
         NodeRB uncle;
-
         while (node != root && node.getParent().getColor() == Color.RED) {
             if (node.getParent() == node.getParent().getParent().getRight()) {
                 uncle = node.getParent().getParent().getLeft();
-
                 if(uncle.getColor() == Color.RED) {
                     flipColor(node, uncle);
                 } else {
@@ -80,11 +68,8 @@ public class RBTree{
                     node.getParent().getParent().setColor(Color.RED);
                     leftRotate(node.getParent().getParent());
                 }
-
-            }
-            else if (node.getParent() == node.getParent().getParent().getLeft()) {
+            } else if (node.getParent() == node.getParent().getParent().getLeft()) {
                 uncle = node.getParent().getParent().getRight();
-
                 if (uncle.getColor() == Color.RED) {
                     flipColor(node, uncle);
                 } else {
@@ -97,10 +82,7 @@ public class RBTree{
                     rightRotate(node.getParent().getParent());
                 }
             }
-
-            if(node == root) {
-                break;
-            }
+            if(node == root) break;
         }
         root.setColor(Color.BLACK);
     }

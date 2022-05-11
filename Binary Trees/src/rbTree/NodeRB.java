@@ -110,7 +110,7 @@ public class NodeRB {
 
     @Override
     public String toString() {
-        return "[name = " + surname +
+        return "[surname = " + surname +
                 ", place = " + place +
                 ", luggage = " + luggageWeight +
                 ", color = " + color.name() +

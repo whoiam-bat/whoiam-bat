@@ -45,7 +45,6 @@ public class BinaryTree{
         if(root == null) throw new NoSuchElementException("Empty tree!");
         return sum() / getSize();
     }
-
     private double sum() {
         Stack<Node> stack = new Stack<>();
         stack.push(this.root);
@@ -72,7 +71,6 @@ public class BinaryTree{
         size = 0;
         return true;
     }
-
     public boolean deleteLeftBranch() {
         if(root.getLeft() != null) root.setLeft(null);
         return true;
@@ -84,6 +82,7 @@ public class BinaryTree{
 
     public void delete(int place) {
         deleteNode(root, place);
+        size--;
     }
     private Node deleteNode(Node root, int place) {
         if(root == null) return root;
@@ -105,7 +104,6 @@ public class BinaryTree{
             root.setData(getMinAtRightSubtree(root.getRight()));
             root.setRight(deleteNode(root.getRight(), root.getPlace()));
         }
-        size--;
         return root;
     }
     private Node getMinAtRightSubtree(Node root) {
@@ -142,10 +140,8 @@ public class BinaryTree{
     public ArrayList<Node> BreadthFirstSearch(Node root) {
         ArrayList<Node> ar = new ArrayList<Node>();
         if(root==null) return ar;
-
         Queue<Node> queue = new LinkedList<Node>();
         queue.offer(root);
-
         while(!queue.isEmpty()){
             Node temp = queue.poll();
             if(temp.getLeft() != null)
@@ -154,20 +150,16 @@ public class BinaryTree{
                 queue.offer(temp.getRight());
             ar.add(temp);
         }
-
         for (Node it : ar) {
             it.setRight(null);
             it.setLeft(null);
         }
         return ar;
     }
-
     public BinaryTree createNewTree(boolean predicate) {
         ArrayList<Node> ar = this.BreadthFirstSearch(this.root);
         if(ar.isEmpty()) throw new ArrayStoreException("Array is empty");
-
         BinaryTree res = new BinaryTree();
-
         while(!ar.isEmpty()) {
             res.insert(ar.remove(0), predicate);
         }
