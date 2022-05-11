@@ -1,8 +1,12 @@
 package binTree;
 
-import java.util.*;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
 
-public class BinaryTree {
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class BinaryTree{
     public Node root;
 
     private int size;
@@ -13,6 +17,7 @@ public class BinaryTree {
 
     public void insert(Node key, boolean predicate) {
         root = fillTree(root, key, predicate);
+        size++;
     }
 
     private Node fillTree(Node root, Node key, boolean createByPlace) {
@@ -38,11 +43,10 @@ public class BinaryTree {
 
     public double average() {
         if(root == null) throw new NoSuchElementException("Empty tree!");
-
         return sum() / getSize();
     }
 
-    public double sum() {
+    private double sum() {
         Stack<Node> stack = new Stack<>();
         stack.push(this.root);
 
@@ -73,7 +77,6 @@ public class BinaryTree {
         if(root.getLeft() != null) root.setLeft(null);
         return true;
     }
-
     public boolean deleteRightBranch() {
         if(root.getRight() != null) root.setRight(null);
         return true;
@@ -122,7 +125,6 @@ public class BinaryTree {
         preOrderTraverse(node.getRight());
 
     }
-
     public void postOrderTraverse(Node node) {
         if (node == null) return;
         postOrderTraverse(node.getLeft());
@@ -130,7 +132,6 @@ public class BinaryTree {
         System.out.println(node);
 
     }
-
     public void inOrderTraverse(Node node) {
         if (node == null) return;
         inOrderTraverse(node.getLeft());
@@ -138,7 +139,7 @@ public class BinaryTree {
         inOrderTraverse(node.getRight());
     }
 
-    private ArrayList<Node> BreadthFirstSearch(Node root) {
+    public ArrayList<Node> BreadthFirstSearch(Node root) {
         ArrayList<Node> ar = new ArrayList<Node>();
         if(root==null) return ar;
 
@@ -175,5 +176,19 @@ public class BinaryTree {
 
     private int getSize() {
         return size;
+    }
+
+    public String forFileOutput(ArrayList<Node> ar) {
+        return ar.stream().map(it -> it.toString()).collect(Collectors.joining("\n"));
+    }
+    @Override
+    public String toString() {
+        return "BinaryTree{" +
+                "surname=" + root.getSurname() +
+                ", place=" + root.getPlace() +
+                ", weight=" + root.getLuggageWeight() +
+                "\nleft=" + root.getLeft() +
+                "\nright=" + root.getRight() +
+                '}';
     }
 }

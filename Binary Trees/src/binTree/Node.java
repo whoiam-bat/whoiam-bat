@@ -36,7 +36,7 @@ public class Node {
     }
 
 
-    public void setData(Node node){
+    public void setData(Node node) {
         this.setSurname(node.getSurname());
         this.setPlace(node.getPlace());
         this.setLuggageWeight(node.getLuggageWeight());
@@ -71,20 +71,10 @@ public class Node {
         return right != null;
     }
 
-
     @Override
     public String toString() {
-        return "[name = " + surname +
+        return "[surname = " + surname +
                 ", place = " + place +
                 ", luggage = " + luggageWeight + "]";
     }
-
-
-    /*@Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("[name = " + surname +
-                ", place = " + place +
-                ", luggage = " + luggageWeight);
-        return String.valueOf(color == null || color.equals("") ? sb.append("]") : sb.append(", color = " + color + "]"));
-    }*/
 }

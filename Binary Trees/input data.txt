@@ -1,0 +1,8 @@
+Silverhand 8 12.0
+Paige 18 3.0
+Lodbrok 5 15.0
+Eco 15 6.0
+Brown 17 18.0
+Miller 25 20.0
+Jackson 40 2.0
+Robinson 80 9.0

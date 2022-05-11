@@ -1,11 +1,17 @@
 package rbTree;
 
 import binTree.Node;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.prefs.NodeChangeEvent;
+import java.util.stream.Collectors;
 
-public class RBTree {
+public class RBTree{
     public NodeRB root;
     private NodeRB TNULL;
 
@@ -14,13 +20,12 @@ public class RBTree {
         TNULL.setColor(Color.BLACK);
         TNULL.setLeft(null);
         TNULL.setRight(null);
-        this.root = TNULL;
+        root = TNULL;
     }
 
     public void insert(NodeRB node) {
         traverseAndInsert(node);
     }
-
     private void traverseAndInsert(NodeRB node) {
         NodeRB insertingNode = new NodeRB(node);
         insertingNode.setParent(null);
@@ -147,32 +152,107 @@ public class RBTree {
         deleteNode(this.root, key);
     }
     private void deleteNode(NodeRB node, int key) {
-        if(node == null) throw new NoSuchElementException("Tree is empty");
-
-        Color color;
-        NodeRB deletedNode = TNULL;
+        NodeRB z = TNULL;
+        NodeRB x, y;
         while(node != TNULL) {
             if(node.getPlace() == key) {
-                deletedNode = node;
-                color = node.getColor();
-            } else if(node.getPlace() < key) {
-                node = node.getLeft();
-            } else {
+                z = node;
+            }
+            if(node.getPlace() <= key) {
                 node = node.getRight();
+            } else {
+                node = node.getLeft();
             }
         }
-
-        //If node is leaf without children and its color is red
-        if(deletedNode.getRight() == TNULL && deletedNode.getLeft() == TNULL && deletedNode.getColor() == Color.RED) {
-            if(deletedNode == deletedNode.getParent().getLeft()) {
-                deletedNode.getParent().setLeft(TNULL);
-            } else if(deletedNode == deletedNode.getParent().getRight()) {
-                deletedNode.getParent().setRight(TNULL);
+        if(z == TNULL) {
+            System.out.println("Couldn't find key in the tree");
+            return;
+        }
+        y = z;
+        Color ordinaryColor = y.getColor();
+        if(z.getLeft() == TNULL) {
+            x = z.getRight();
+            rbTransplant(z, z.getRight());
+        } else if(z.getRight() == TNULL) {
+            x = z.getLeft();
+            rbTransplant(z, z.getLeft());
+        } else {
+            y = minimum(z.getRight());
+            ordinaryColor = y.getColor();
+            x = y.getRight();
+            if(y.getParent() == z) {
+                x.setParent(y);
+            } else {
+                rbTransplant(y, y.getRight());
+                y.setRight(z.getRight());
+                y.getRight().setParent(y);
+            }
+            rbTransplant(z, y);
+            y.setLeft(z.getLeft());
+            y.getLeft().setParent(y);
+            y.setColor(z.getColor());
+        }
+        if(ordinaryColor == Color.BLACK) {
+            deletingBalance(x);
+        }
+    }
+    private void deletingBalance(NodeRB k) {
+        NodeRB u;
+        while(k.getParent().getColor() == Color.RED) {
+            if(k.getParent() == k.getParent().getParent().getRight()) {
+                u = k.getParent().getParent().getLeft(); //uncle
+                if(u.getColor() == Color.RED) {
+                    u.setColor(Color.BLACK);
+                    k.getParent().setColor(Color.BLACK);
+                    k.getParent().getParent().setColor(Color.RED);
+                    k = k.getParent().getParent();
+                } else {
+                    if(k == k.getParent().getLeft()) {
+                        k = k.getParent();
+                        rightRotate(k);
+                    }
+                    k.getParent().setColor(Color.BLACK);
+                    k.getParent().getParent().setColor(Color.RED);
+                    leftRotate(k.getParent().getParent());
+                }
+            } else {
+                u = k.getParent().getParent().getRight(); //uncle
+                if(u.getColor() == Color.RED) {
+                    u.setColor(Color.BLACK);
+                    k.getParent().setColor(Color.BLACK);
+                    k.getParent().getParent().setColor(Color.RED);
+                    k = k.getParent().getParent();
+                } else {
+                    if(k == k.getParent().getRight()) {
+                        k = k.getParent();
+                        leftRotate(k);
+                    }
+                    k.getParent().setColor(Color.BLACK);
+                    k.getParent().getParent().setColor(Color.RED);
+                    leftRotate(k.getParent().getParent());
+                }
+            }
+            if (k == root) {
+                break;
             }
         }
-        //If node has only one child and its color is red
-        //else if()
-
+        root.setColor(Color.BLACK);
+    }
+    private NodeRB minimum(NodeRB node) {
+        while (node.getLeft() != TNULL) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+    private void rbTransplant(NodeRB u, NodeRB v) {
+        if (u.getParent() == null) {
+            root = v;
+        } else if (u == u.getParent().getLeft()) {
+            u.parent.setLeft(v);
+        } else {
+            u.parent.setRight(v);
+        }
+        v.parent = u.parent;
     }
 
 
@@ -196,7 +276,31 @@ public class RBTree {
         inOrderTraverse(node.getRight());
     }
 
+    public ArrayList<NodeRB> BreadthFirstSearch(NodeRB root) {
+        ArrayList<NodeRB> ar = new ArrayList<NodeRB>();
+        if(root==null) return ar;
 
+        Queue<NodeRB> queue = new LinkedList<NodeRB>();
+        queue.offer(root);
+
+        while(!queue.isEmpty()){
+            NodeRB temp = queue.poll();
+            if(temp.getLeft() != null)
+                queue.offer(temp.getLeft());
+            if(temp.getRight() != null)
+                queue.offer(temp.getRight());
+            ar.add(temp);
+        }
+
+        for (NodeRB it : ar) {
+            it.setRight(null);
+            it.setLeft(null);
+        }
+        return ar;
+    }
+    public String forFileOutput(ArrayList<NodeRB> ar) {
+        return ar.stream().map(NodeRB::toString).collect(Collectors.joining("\n"));
+    }
     public boolean isValidTree() {
         return true;
     }
