@@ -16,7 +16,7 @@ public class Main {
     }
     public static void run() throws IOException {
         Scanner scanner = new Scanner(System.in);
-        int[] ar = new int[0];
+        int[] ar = null;
         Sortingable s = null;
         menu();
         boolean predicate = true;
@@ -66,7 +66,6 @@ public class Main {
                     }
                 }
                 case 8 -> System.exit(0);
-
                 default -> throw new NoSuchElementException("There is no command with such index");
             }
         }
