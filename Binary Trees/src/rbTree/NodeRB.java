@@ -110,10 +110,9 @@ public class NodeRB {
 
     @Override
     public String toString() {
-        return "[surname = " + surname +
-                ", place = " + place +
-                ", luggage = " + luggageWeight +
-                ", color = " + color.name() +
-                "]";
+        return "RBTree[surname=" + surname +
+                ", place=" + place +
+                ", weight=" + luggageWeight +
+                ", color=" + color + "]";
     }
 }

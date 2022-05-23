@@ -12,11 +12,12 @@ public class Main {
         System.out.println("1. Add element;");
         System.out.println("2. Create tree from file;");
         System.out.println("3. Delete element;");
-        System.out.println("4. Print pre-order;");
-        System.out.println("5. Print post-order;");
-        System.out.println("6. Print in-order;");
-        System.out.println("7. Fill file;");
-        System.out.println("8. Exit");
+        System.out.println("4. Print tree;");
+        System.out.println("5. Print pre-order;");
+        System.out.println("6. Print post-order;");
+        System.out.println("7. Print in-order;");
+        System.out.println("8. Fill file;");
+        System.out.println("9. Exit");
     }
 
     public static void run() throws IOException {
@@ -50,10 +51,11 @@ public class Main {
                     int place = scanner.nextInt();
                     rbTree.delete(place);
                 }
-                case 4 -> rbTree.preOrderTraverse(rbTree.root);
-                case 5 -> rbTree.postOrderTraverse(rbTree.root);
-                case 6 -> rbTree.inOrderTraverse(rbTree.root);
-                case 7 -> {
+                case 4 -> rbTree.prettyPrint();
+                case 5 -> rbTree.preOrderTraverse(rbTree.root);
+                case 6 -> rbTree.postOrderTraverse(rbTree.root);
+                case 7 -> rbTree.inOrderTraverse(rbTree.root);
+                case 8 -> {
                     try {
                         FileWriter file = new FileWriter("rbTree.txt", false);
                         file.write(rbTree.forFileOutput(rbTree.BreadthFirstSearch(rbTree.root)));
@@ -64,7 +66,7 @@ public class Main {
                         System.out.println("File is not exist ==> " + e.getMessage());
                     }
                 }
-                case 8 -> System.exit(0);
+                case 9 -> System.exit(0);
 
                 default -> throw new NoSuchElementException("There is no command with such index");
             }

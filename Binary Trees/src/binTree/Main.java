@@ -10,15 +10,16 @@ public class Main {
         System.out.println("2. Create tree from file;");
         System.out.println("3. Delete element;");
         System.out.println("4. Average;");
-        System.out.println("5. Print pre-order;");
-        System.out.println("6. Print post-order;");
-        System.out.println("7. Print in-order;");
-        System.out.println("8. Rewrite tree by other key;");
-        System.out.println("9. Fill file;");
-        System.out.println("10. Delete right branch;");
-        System.out.println("11. Delete left branch;");
-        System.out.println("12. Delete tree;");
-        System.out.println("13. Exit");
+        System.out.println("5. Print tree;");
+        System.out.println("6. Print pre-order;");
+        System.out.println("7. Print post-order;");
+        System.out.println("8. Print in-order;");
+        System.out.println("9. Rewrite tree by other key;");
+        System.out.println("10. Fill file;");
+        System.out.println("11. Delete right branch;");
+        System.out.println("12. Delete left branch;");
+        System.out.println("13. Delete tree;");
+        System.out.println("14. Exit");
     }
     public static void run() throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -52,15 +53,16 @@ public class Main {
                     binaryTree.delete(place);
                 }
                 case 4 -> System.out.println(binaryTree.average());
-                case 5 -> binaryTree.preOrderTraverse(binaryTree.root);
-                case 6 -> binaryTree.postOrderTraverse(binaryTree.root);
-                case 7 -> binaryTree.inOrderTraverse(binaryTree.root);
-                case 8 -> {
+                case 5 -> binaryTree.prettyPrint();
+                case 6 -> binaryTree.preOrderTraverse(binaryTree.root);
+                case 7 -> binaryTree.postOrderTraverse(binaryTree.root);
+                case 8 -> binaryTree.inOrderTraverse(binaryTree.root);
+                case 9 -> {
                     if(predicate) predicate = false;
                     else predicate = true;
                     binaryTree = binaryTree.createNewTree(predicate);
                 }
-                case 9 -> {
+                case 10 -> {
                     try {
                         FileWriter file = new FileWriter("binaryTree.txt", false);
                         file.write(binaryTree.forFileOutput(binaryTree.BreadthFirstSearch(binaryTree.root)));
@@ -71,10 +73,10 @@ public class Main {
                         System.out.println("File is not exist ==> " + e.getMessage());
                     }
                 }
-                case 10 -> binaryTree.deleteRightBranch();
-                case 11 -> binaryTree.deleteLeftBranch();
-                case 12 -> binaryTree.deleteTree();
-                case 13 -> System.exit(0);
+                case 11 -> binaryTree.deleteRightBranch();
+                case 12 -> binaryTree.deleteLeftBranch();
+                case 13 -> binaryTree.deleteTree();
+                case 14 -> System.exit(0);
 
                 default -> throw new NoSuchElementException("There is no command with such index");
             }

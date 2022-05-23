@@ -1,5 +1,7 @@
 package rbTree;
 
+import binTree.Node;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -8,6 +10,7 @@ import java.util.stream.Collectors;
 public class RBTree{
     public NodeRB root;
     private NodeRB TNULL;
+    public static final int COUNT = 20;
 
     public RBTree() {
         TNULL = new NodeRB();
@@ -51,14 +54,18 @@ public class RBTree{
             return;
         }
         insertingBalance(insertingNode);
+        return;
     }
     private void insertingBalance(NodeRB node) {
         NodeRB uncle;
-        while (node != root && node.getParent().getColor() == Color.RED) {
+        while (node.getParent().getColor() == Color.RED) {
             if (node.getParent() == node.getParent().getParent().getRight()) {
                 uncle = node.getParent().getParent().getLeft();
                 if(uncle.getColor() == Color.RED) {
-                    flipColor(node, uncle);
+                    uncle.setColor(Color.BLACK);
+                    node.getParent().setColor(Color.BLACK);
+                    node.getParent().getParent().setColor(Color.RED);
+                    node = node.getParent().getParent();
                 } else {
                     if(node == node.getParent().getLeft()) {
                         node = node.getParent();
@@ -68,10 +75,13 @@ public class RBTree{
                     node.getParent().getParent().setColor(Color.RED);
                     leftRotate(node.getParent().getParent());
                 }
-            } else if (node.getParent() == node.getParent().getParent().getLeft()) {
+            } else {
                 uncle = node.getParent().getParent().getRight();
                 if (uncle.getColor() == Color.RED) {
-                    flipColor(node, uncle);
+                    uncle.setColor(Color.BLACK);
+                    node.getParent().setColor(Color.BLACK);
+                    node.getParent().getParent().setColor(Color.RED);
+                    node = node.getParent().getParent();
                 } else {
                     if (node == node.getParent().getRight()) {
                         node = node.getParent();
@@ -123,17 +133,11 @@ public class RBTree{
         tempRoot.setRight(newNode);
         newNode.setParent(tempRoot);
     }
-    private void flipColor(NodeRB node, NodeRB uncle) {
-        uncle.setColor(Color.BLACK);
-        node.getParent().setColor(Color.BLACK);
-        node.getParent().getParent().setColor(Color.RED);
-        node = node.getParent().getParent();
-    }
+
 
     public void delete(int key) {
-        deleteNode(this.root, key);
-    }
-    private void deleteNode(NodeRB node, int key) {
+        NodeRB parent = null;
+        NodeRB node = findWithParent(key, parent);
         NodeRB z = TNULL;
         NodeRB x, y;
         while(node != TNULL) {
@@ -178,47 +182,85 @@ public class RBTree{
             deletingBalance(x);
         }
     }
-    private void deletingBalance(NodeRB k) {
-        NodeRB u;
-        while(k.getParent().getColor() == Color.RED) {
-            if(k.getParent() == k.getParent().getParent().getRight()) {
-                u = k.getParent().getParent().getLeft(); //uncle
-                if(u.getColor() == Color.RED) {
-                    u.setColor(Color.BLACK);
-                    k.getParent().setColor(Color.BLACK);
-                    k.getParent().getParent().setColor(Color.RED);
-                    k = k.getParent().getParent();
-                } else {
-                    if(k == k.getParent().getLeft()) {
-                        k = k.getParent();
-                        rightRotate(k);
-                    }
-                    k.getParent().setColor(Color.BLACK);
-                    k.getParent().getParent().setColor(Color.RED);
-                    leftRotate(k.getParent().getParent());
-                }
+    private NodeRB findWithParent(int key, NodeRB parent) {
+        if(root.getPlace() == key) {
+            return root;
+        }
+        NodeRB curr = root;
+        while(curr != null) {
+            if(curr.getPlace() == key) return curr;
+            parent = curr;
+            if(key < curr.getPlace()) {
+                curr = curr.getLeft();
             } else {
-                u = k.getParent().getParent().getRight(); //uncle
-                if(u.getColor() == Color.RED) {
-                    u.setColor(Color.BLACK);
-                    k.getParent().setColor(Color.BLACK);
-                    k.getParent().getParent().setColor(Color.RED);
-                    k = k.getParent().getParent();
-                } else {
-                    if(k == k.getParent().getRight()) {
-                        k = k.getParent();
-                        leftRotate(k);
-                    }
-                    k.getParent().setColor(Color.BLACK);
-                    k.getParent().getParent().setColor(Color.RED);
-                    leftRotate(k.getParent().getParent());
-                }
-            }
-            if (k == root) {
-                break;
+                curr = curr.getRight();
             }
         }
-        root.setColor(Color.BLACK);
+        return null;
+    }
+    private void deletingBalance(NodeRB x) {
+        NodeRB s = null;
+        while(x != root && x.getColor() == Color.BLACK) {
+            if (x == x.getParent().getLeft()) {
+                s = x.getParent().getRight();
+                if(s.getColor() == Color.RED) {
+                    //case 3.1
+                    s.setColor(Color.BLACK);
+                    x.getParent().setColor(Color.RED);
+                    leftRotate(x.getParent());
+                    s = x.getParent().getRight();
+                }
+                if(s.getLeft().getColor() == Color.BLACK && s.getRight().getColor() == Color.BLACK){
+                    //case 3.2
+                    s.setColor(Color.RED);
+                    x = x.getParent();
+                } else {
+                    if(s.getRight().getColor() == Color.BLACK) {
+                        //case 3.3
+                        s.getLeft().setColor(Color.BLACK);
+                        s.setColor(Color.RED);
+                        rightRotate(s);
+                        s = x.getParent().getRight();
+                    }
+
+                    //case 3.4
+                    s.setColor(x.getParent().getColor());
+                    x.getParent().setColor(Color.BLACK);
+                    s.getRight().setColor(Color.BLACK);
+                    leftRotate(x.getParent());
+                    x = root;
+                }
+            } else {
+                s = x.getParent().getLeft();
+                if(s.getColor() == Color.RED) {
+                    //case 3.1
+                    s.setColor(Color.BLACK);
+                    x.getParent().setColor(Color.RED);
+                    rightRotate(x.getParent());
+                    s = x.getParent().getLeft();
+                }
+                if(s.getLeft().getColor() == Color.BLACK && s.getRight().getColor() == Color.BLACK){
+                    //case 3.2
+                    s.setColor(Color.RED);
+                    x = x.getParent();
+                } else {
+                    if(s.getLeft().getColor() == Color.BLACK) {
+                        //case 3.3
+                        s.getRight().setColor(Color.BLACK);
+                        s.setColor(Color.RED);
+                        leftRotate(s);
+                        s = x.getParent().getLeft();
+                    }
+                    //case 3.4
+                    s.setColor(x.getParent().getColor());
+                    x.getParent().setColor(Color.BLACK);
+                    s.getLeft().setColor(Color.BLACK);
+                    rightRotate(x.getParent());
+                    x = root;
+                }
+            }
+        }
+        x.setColor(Color.BLACK);
     }
     private NodeRB minimum(NodeRB node) {
         while (node.getLeft() != TNULL) {
@@ -236,7 +278,13 @@ public class RBTree{
         }
         v.parent = u.parent;
     }
-
+    private void deleteLeaf(NodeRB leaf) {
+        if(leaf != TNULL) {
+            deleteLeaf(leaf.getRight());
+            deleteLeaf(leaf.getLeft());
+            leaf = TNULL;
+        }
+    }
 
     public void preOrderTraverse(NodeRB node) {
         if (node == TNULL) return;
@@ -281,9 +329,51 @@ public class RBTree{
         return ar;
     }
     public String forFileOutput(ArrayList<NodeRB> ar) {
-        return ar.stream().map(NodeRB::toString).collect(Collectors.joining("\n"));
+        return print2DUtil(root, 0);//ar.stream().map(NodeRB::toString).collect(Collectors.joining("\n"));
     }
     public boolean isValidTree() {
         return true;
+    }
+
+    private String print2DUtil(NodeRB root, int space) {
+        StringBuilder sb = new StringBuilder();
+        if (root == null) return "";
+
+        space += COUNT;
+
+        sb.append(print2DUtil(root.getRight(), space));
+
+        //System.out.println();
+        sb.append("\n");
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("surname = " + root.getSurname() + "\n");
+        //System.out.println(root.getSurname());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("place = " + root.getPlace() + "\n");
+        //System.out.println(root.getPlace());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("weight = " + root.getLuggageWeight() + "\n");
+        //System.out.println(root.getLuggageWeight());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append(root.getColor() + "\n");
+        //System.out.println(root.getColor());
+
+        sb.append(print2DUtil(root.getLeft(), space));
+        return sb.toString();
+    }
+    public void prettyPrint() {
+        System.out.println(print2DUtil(root, 0));
     }
 }

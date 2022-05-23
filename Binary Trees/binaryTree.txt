@@ -1,0 +1,7 @@
+[surname = Silverhand, place = 8, luggage = 12.0]
+[surname = Lodbrok, place = 5, luggage = 15.0]
+[surname = Paige, place = 18, luggage = 3.0]
+[surname = Eco, place = 15, luggage = 6.0]
+[surname = Miller, place = 25, luggage = 20.0]
+[surname = Brown, place = 17, luggage = 18.0]
+[surname = Robinson, place = 80, luggage = 9.0]

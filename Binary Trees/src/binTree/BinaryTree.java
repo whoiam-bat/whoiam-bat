@@ -2,11 +2,13 @@ package binTree;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import rbTree.NodeRB;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BinaryTree{
+public class BinaryTree {
+    public static final int COUNT = 20;
     public Node root;
 
     private int size;
@@ -170,6 +172,44 @@ public class BinaryTree{
         return size;
     }
 
+    private String print2DUtil(Node root, int space) {
+        StringBuilder sb = new StringBuilder();
+        if (root == null) return "";
+
+        space += COUNT;
+
+        sb.append(print2DUtil(root.getRight(), space));
+
+        //System.out.println();
+        sb.append("\n");
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("surname = " + root.getSurname() + "\n");
+        //System.out.println(root.getSurname());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("place = " + root.getPlace() + "\n");
+        //System.out.println(root.getPlace());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append("weight = " + root.getLuggageWeight() + "\n");
+        //System.out.println(root.getLuggageWeight());
+        for (int i = COUNT; i < space; i++) {
+            sb.append(" ");
+            //System.out.print(" ");
+        }
+        sb.append(print2DUtil(root.getLeft(), space));
+        return sb.toString();
+    }
+    public void prettyPrint() {
+        System.out.println(print2DUtil(root, 0));
+    }
     public String forFileOutput(ArrayList<Node> ar) {
         return ar.stream().map(it -> it.toString()).collect(Collectors.joining("\n"));
     }
